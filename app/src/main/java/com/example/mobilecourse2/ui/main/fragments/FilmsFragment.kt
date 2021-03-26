@@ -3,6 +3,7 @@ package com.example.mobilecourse2.ui.main.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -28,7 +29,7 @@ class FilmsFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     requestManager: RequestManager
-): Fragment() {
+) : Fragment() {
 
     private lateinit var adapter: FilmAdapter
 
@@ -67,11 +68,11 @@ constructor(
 
     private fun setupLayoutManager() {
         rv_films.layoutManager =
-            GridLayoutManager(activity,2,GridLayoutManager.VERTICAL,false)
+            GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
     }
 
     private fun setListeners() {
-               swipe_refresh.setOnRefreshListener {
+        swipe_refresh.setOnRefreshListener {
             swipe_refresh.isRefreshing = true
             loadList()
             swipe_refresh.isRefreshing = false
@@ -79,31 +80,29 @@ constructor(
     }
 
 
-
     private fun setupObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner,{state ->
-            when(state) {
+        viewModel.viewState.observe(viewLifecycleOwner, { state ->
+            when (state) {
                 is ListFetchingViewState.Success -> {
                 }
                 is ListFetchingViewState.Loading -> {
                 }
                 is ListFetchingViewState.FetchingFailed -> {
-                    tv_films.text = "ERROR"
+                    Toast.makeText(activity, "Ошибка загрузки", Toast.LENGTH_LONG).show()
                 }
             }
         })
     }
 
     private fun setupAdapter() {
-        val clickLambda:(String) -> Unit =  { id ->
+        val clickLambda: (String) -> Unit = { id ->
             Log.d("Test", "in fragm $id")
             val action = FilmsFragmentDirections.actionFilmsFragmentToDetailsFragment(id)
-            (activity as MainActivity).navHost.navController.
-            navigate(action)
+            (activity as MainActivity).navHost.navController.navigate(action)
         }
         adapter = FilmAdapter(clickLambda, downloadImageHelper)
         rv_films.adapter = adapter.withLoadStateFooter(
-            footer = FilmLoadStateAdapter{adapter.retry()}
+            footer = FilmLoadStateAdapter { adapter.retry() }
         )
     }
 

@@ -56,7 +56,7 @@ class DetailsFragment
                     progress_bar.isVisible = false
                     tv_year.isVisible = true
                     iv_poster.isVisible = true
-                    tv_year.isVisible = true
+                    tv_title.isVisible = true
                     val film = state.film
                     tv_title.text = film.title
                     tv_year.text = film.year.toString()
@@ -66,7 +66,7 @@ class DetailsFragment
                     progress_bar.isVisible = true
                     tv_year.isVisible = false
                     iv_poster.isVisible = false
-                    tv_year.isVisible = false
+                    tv_title.isVisible = false
                 }
             }
         })
